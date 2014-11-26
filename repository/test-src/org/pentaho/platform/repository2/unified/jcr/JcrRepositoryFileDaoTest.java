@@ -84,7 +84,7 @@ public class JcrRepositoryFileDaoTest {
 
   private MockUp<?> jcrRepositoryFileUtilsMockUp;
   private MockUp<?> jcrRepositoryFileAclUtilsMockUp;
-  private MockUp<?> JcrRepositoryFileDaoInstMockUp;
+  private MockUp<?> JcrRepositoryFileDaoMockUp;
   private MockUp<?> repositoryFileBuilderMockUp;
   private MockUp<?> pentahoSessionHolderMockUp;
 
@@ -261,8 +261,8 @@ public class JcrRepositoryFileDaoTest {
     };
   }
 
-  private MockUp<JcrRepositoryFileDaoInst> setUpJcrRepositoryFileDaoInstMock() {
-    return new MockUp<JcrRepositoryFileDaoInst>() {
+  private MockUp<JcrRepositoryFileDao> setUpJcrRepositoryFileDaoMock() {
+    return new MockUp<JcrRepositoryFileDao>() {
       @Mock
       public RepositoryFile internalGetFileById( Session session, final Serializable fileId, final boolean loadMaps,
           final IPentahoLocale locale ) {
@@ -326,7 +326,7 @@ public class JcrRepositoryFileDaoTest {
     };
   }
 
-  private JcrRepositoryFileDaoInst createJcrRepositoryFileDaoInst() {
+  private JcrRepositoryFileDao createJcrRepositoryFileDao() {
     List<ITransformer<IRepositoryFileData>> transformers = Collections.emptyList();
     ILockHelper lockHelper = new MockUp<ILockHelper>() {
       @Mock
@@ -365,7 +365,7 @@ public class JcrRepositoryFileDaoTest {
         return true;
       }
     }.getMockInstance();
-    return new JcrRepositoryFileDaoInst( transformers, lockHelper, deleteHelper, conversionHelper, aclDao, null,
+    return new JcrRepositoryFileDao( transformers, lockHelper, deleteHelper, conversionHelper, aclDao, null,
         accessVoterManager, null );
   }
 
@@ -373,7 +373,7 @@ public class JcrRepositoryFileDaoTest {
   public void MoksUp() throws RepositoryException {
     jcrRepositoryFileUtilsMockUp = setUpJcrRepositoryFileUtilsMock();
     jcrRepositoryFileAclUtilsMockUp = setUpJcrRepositoryFileAclUtilsMock();
-    JcrRepositoryFileDaoInstMockUp = setUpJcrRepositoryFileDaoInstMock();
+    JcrRepositoryFileDaoMockUp = setUpJcrRepositoryFileDaoMock();
     repositoryFileBuilderMockUp = setUpRepositoryFileBuilderMock();
     pentahoSessionHolderMockUp = setUpPentahoSessionHolderMock();
     new NonStrictExpectations() {
@@ -458,7 +458,7 @@ public class JcrRepositoryFileDaoTest {
   public void after() {
     jcrRepositoryFileUtilsMockUp.tearDown();
     jcrRepositoryFileAclUtilsMockUp.tearDown();
-    JcrRepositoryFileDaoInstMockUp.tearDown();
+    JcrRepositoryFileDaoMockUp.tearDown();
     repositoryFileBuilderMockUp.tearDown();
     pentahoSessionHolderMockUp.tearDown();
   }
@@ -469,7 +469,7 @@ public class JcrRepositoryFileDaoTest {
   public void getVersionSummaryTest() throws RepositoryException {
     MockUp<?> jcrRepositoryFileUtilsMockUp = setUpJcrRepositoryFileUtilsMock();
 
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.getVersionSummary( null, null, null );
 
     jcrRepositoryFileUtilsMockUp.tearDown();
@@ -477,192 +477,192 @@ public class JcrRepositoryFileDaoTest {
 
   @Test
   public void internalCreateFolderTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.internalCreateFolder( session, null, file, fileAcl, null );
   }
 
   @Test
   public void internalCreateFileTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.internalCreateFile( session, null, file, null, fileAcl, null );
   }
 
   @Test
   public void internalUpdateFileTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.internalUpdateFile( session, file, content, null );
   }
 
   @Test
   public void internalUpdateFolderTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.internalUpdateFolder( session, file, null );
   }
 
   @Test
   public void undeleteFileTest() throws RepositoryException, IOException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.undeleteFile( session, null, null );
   }
 
   @Test
   public void deleteFileTest() throws RepositoryException, IOException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.deleteFile( session, null, null );
   }
 
   @Test
   public void deleteFileAtVersionTest() throws RepositoryException, IOException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.deleteFileAtVersion( session, FILE_ID, VERSION_ID );
   }
 
   @Test
   public void getDeletedFilesTest() throws RepositoryException, IOException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.getDeletedFiles( session );
     dao.getDeletedFiles( session, null, null );
   }
 
   @Test
   public void permanentlyDeleteFileTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.permanentlyDeleteFile( session, FILE_ID, null );
   }
 
   @Test
   public void getChildrenTest() throws RepositoryException, IOException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.getChildren( session, null );
     dao.getChildren( session, FILE_ID, null, false );
   }
 
   @Test
   public void getDataTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.getData( session, FILE_ID, VERSION_ID, fileData.getClass() );
   }
 
   @Test
   public void checkAndGetFileByIdTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.checkAndGetFileById( session, FILE_ID, false, pentahoLocale );
   }
 
   @Test
   public void getFileByRelPathTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.getFileByRelPath( session, ABSOLUTE_PATH, false, pentahoLocale );
   }
 
   @Test
   public void internalGetFileTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.internalGetFile( session, ABSOLUTE_PATH, false, pentahoLocale );
   }
 
   @Test
   public void isUserTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     Deencapsulation.invoke( dao, "isUser" );
   }
 
   @Test
   public void internalCopyOrMoveTest() throws RepositoryException, IOException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.internalCopyOrMove( session, file, ABSOLUTE_PATH, null, true );
     dao.internalCopyOrMove( session, file, ABSOLUTE_PATH, null, false );
   }
 
   @Test
   public void getReferrerFileTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.getReferrerFile( session, new PentahoJcrConstants( session ), referrerProperty );
   }
 
   @Test
   public void getReferrersTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.getReferrers( session, FILE_ID );
   }
 
   @Test
   public void getTreeTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.getTree( session, repositoryRequest );
   }
 
   @Test
   public void canUnlockFileTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.canUnlockFile( session, FILE_ID );
   }
 
   @Test
   public void restoreFileAtVersionTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.restoreFileAtVersion( session, FILE_ID, VERSION_ID, null );
   }
 
   @Test
   public void getAvailableLocalesForFileTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.getAvailableLocalesForFile( file );
   }
 
   @Test
   public void getLocalePropertiesForFileTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.getLocalePropertiesForFile( file, null );
   }
 
   @Test
   public void setLocalePropertiesForFileTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.setLocalePropertiesForFile( session, file, null, null );
   }
 
   @Test
   public void deleteLocalePropertiesForFileTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.deleteLocalePropertiesForFile( session, file, null );
   }
 
   @Test
   public void lockFileTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.lockFile( session, FILE_ID, null );
   }
 
   @Test
   public void unlockFileTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.unlockFile( session, FILE_ID );
   }
 
   @Test
   public void getVersionSummariesTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.getVersionSummaries( session, FILE_ID );
   }
 
   @Test
   public void getFileTest() throws RepositoryException {
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     dao.getFile( session, FILE_ID, VERSION_ID );
   }
 
   @Test
   public void internalGetFileByIdTest() {
-    JcrRepositoryFileDaoInstMockUp.tearDown();
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDaoMockUp.tearDown();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     Deencapsulation.invoke( dao, "internalGetFileById", session, FILE_ID, false, pentahoLocale );
   }
 
   @Test
   public void hasAccessTest() {
-    JcrRepositoryFileDaoInstMockUp.tearDown();
-    JcrRepositoryFileDaoInst dao = createJcrRepositoryFileDaoInst();
+    JcrRepositoryFileDaoMockUp.tearDown();
+    JcrRepositoryFileDao dao = createJcrRepositoryFileDao();
     Deencapsulation.invoke( dao, "hasAccess", session, FILE_ID,
         new RepositoryFilePermission[] { RepositoryFilePermission.READ } );
   }

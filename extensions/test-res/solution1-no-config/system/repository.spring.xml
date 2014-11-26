@@ -634,22 +634,25 @@
   <!--
   	The repository file dao implementation. 
    -->
-  <bean id="repositoryFileDao" class="org.pentaho.platform.repository2.unified.jcr.JcrRepositoryFileDao">
-    <constructor-arg ref="jcrTemplate"/>
-    <constructor-arg ref="transformers"/>
-    <constructor-arg ref="lockHelper"/>
+  <bean id="repositoryFileNativeDao" class="org.pentaho.platform.repository2.unified.jcr.JcrRepositoryFileDao">
+   <constructor-arg ref="transformers"/>
+    <constructor-arg ref="ILockHelper"/> 
     <constructor-arg>
       <bean class="org.pentaho.platform.repository2.unified.jcr.DefaultDeleteHelper">
-        <constructor-arg ref="lockHelper"/>
+        <constructor-arg ref="ILockHelper"/>
         <constructor-arg ref="pathConversionHelper"/>
-	      </bean>
+      </bean>
     </constructor-arg>
     <constructor-arg ref="pathConversionHelper"/>
     <constructor-arg ref="repositoryFileAclDao"/>
-    <constructor-arg ref="defaultAclHandler" />
-    <pen:attributes>
-      <pen:attr key="priority" value="30"/>
-    </pen:attributes>
+    <constructor-arg ref="defaultAclHandler"/>
+    <constructor-arg ref="repositoryAccessVoterManager"/>
+    <constructor-arg ref="repositoryAdminUsername"/>    
+  </bean>
+
+  <bean id="repositoryFileDao" class="org.pentaho.platform.repository2.unified.jcr.JcrRepositoryFileDaoFacade">
+      <constructor-arg ref="jcrTemplate"/>
+      <constructor-arg ref="repositoryFileNativeDao"/>
   </bean>
 
   <util:list id="transformers">
