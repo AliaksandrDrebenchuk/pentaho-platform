@@ -524,7 +524,7 @@
       <value>
         org.pentaho.platform.security.policy.rolebased.IRoleAuthorizationPolicyRoleBindingDao.getRoleBindingStruct=PROPAGATION_REQUIRED,readOnly
         org.pentaho.platform.security.policy.rolebased.IRoleAuthorizationPolicyRoleBindingDao.setRoleBindings=PROPAGATION_REQUIRED
-        org.pentaho.platform.security.policy.rolebased.IRoleAuthorizationPolicyRoleBindingDao.getBoundLogicalRoleNames=PROPAGATION_REQUIRED,readOnly
+<!--        org.pentaho.platform.security.policy.rolebased.IRoleAuthorizationPolicyRoleBindingDao.getBoundLogicalRoleNames=PROPAGATION_REQUIRED,readOnly-->
       </value>
     </property>
   </bean>
