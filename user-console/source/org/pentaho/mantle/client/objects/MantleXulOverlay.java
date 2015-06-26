@@ -17,6 +17,7 @@
 
 package org.pentaho.mantle.client.objects;
 
+import org.pentaho.gwt.widgets.client.utils.string.StringUtils;
 import org.pentaho.ui.xul.XulOverlay;
 
 import java.io.Serializable;
@@ -34,6 +35,8 @@ public class MantleXulOverlay implements Serializable, XulOverlay {
   private String resourceBundleUri;
 
   private int priority;
+  
+  private String permission;
 
   public MantleXulOverlay() {
   }
@@ -72,5 +75,13 @@ public class MantleXulOverlay implements Serializable, XulOverlay {
 
   public int getPriority() {
     return priority;
+  }
+  
+  public void setPermission( String permission ) {
+    this.permission = StringUtils.isEmpty( permission ) ? DEFAULT_PERMISSION : permission;
+  }
+  
+  public String getPermission() {
+    return permission;
   }
 }

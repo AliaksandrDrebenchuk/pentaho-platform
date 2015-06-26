@@ -17,6 +17,9 @@
 
 package org.pentaho.platform.web.http.api.resources;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
+
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.enunciate.Facet;
 import org.pentaho.platform.api.engine.IAuthorizationPolicy;
@@ -30,6 +33,9 @@ import org.pentaho.platform.security.policy.rolebased.actions.RepositoryCreateAc
 import org.pentaho.platform.security.policy.rolebased.actions.RepositoryReadAction;
 import org.pentaho.ui.xul.XulOverlay;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -38,11 +44,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
-
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
 @Path( "/plugin-manager/" )
 public class PluginManagerResource {
@@ -66,8 +67,13 @@ public class PluginManagerResource {
     IPluginManager pluginManager = PentahoSystem.get( IPluginManager.class, PentahoSessionHolder.getSession() ); //$NON-NLS-1$
     List<XulOverlay> overlays = pluginManager.getOverlays();
     ArrayList<Overlay> result = new ArrayList<Overlay>();
+    IAuthorizationPolicy policy = PentahoSystem.get( IAuthorizationPolicy.class );
     for ( XulOverlay overlay : overlays ) {
       if ( !id.isEmpty() && !overlay.getId().equals( id ) ) {
+        continue;
+      }
+      if(!policy.isAllowed( overlay.getPermission() ))
+      {
         continue;
       }
       Overlay tempOverlay =

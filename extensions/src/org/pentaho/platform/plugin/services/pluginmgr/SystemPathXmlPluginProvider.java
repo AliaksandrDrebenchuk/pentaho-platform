@@ -20,6 +20,7 @@ package org.pentaho.platform.plugin.services.pluginmgr;
 import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Node;
@@ -307,29 +308,24 @@ public class SystemPathXmlPluginProvider implements IPluginProvider {
   }
 
   public static DefaultXulOverlay processOverlay( Element node ) {
-    DefaultXulOverlay overlay = null;
-
     String id = node.attributeValue( "id" ); //$NON-NLS-1$
     String resourceBundleUri = node.attributeValue( "resourcebundle" ); //$NON-NLS-1$
     String priority = node.attributeValue( "priority" );
+    String permission = node.attributeValue( "permission" );
 
     String xml = node.asXML();
-
-    if ( StringUtils.isNotEmpty( id ) && StringUtils.isNotEmpty( xml ) ) {
-      // check for overlay priority attribute. if not present, do not provide one
-      // so default will be used
-      if ( StringUtils.isNotEmpty( priority ) ) {
-        try {
-          overlay = new DefaultXulOverlay( id, null, xml, resourceBundleUri, Integer.parseInt( priority ) );
-        } catch ( NumberFormatException e ) {
-          // don't fail if attribute value is invalid. just use alt constructor without priority
-          overlay = new DefaultXulOverlay( id, null, xml, resourceBundleUri );
-        }
-      } else {
-        overlay = new DefaultXulOverlay( id, null, xml, resourceBundleUri );
-      }
+    
+    if ( StringUtils.isBlank( id ) || StringUtils.isBlank( xml ) ) {
+      return null;
     }
 
+    DefaultXulOverlay overlay = new DefaultXulOverlay( id, null, xml, resourceBundleUri );
+    int priorityInt = NumberUtils.toInt( priority, -1 );
+    if ( priorityInt != -1 ){
+      overlay.setPriority( priorityInt );
+    }  
+    overlay.setPermission( permission );
+    
     return overlay;
   }
 
